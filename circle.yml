@@ -10,20 +10,7 @@ checkout:
     - git submodule sync
     - git submodule update --init
 
-dependencies:
-  override:
-    - |
-        mvn test-compile dependency:go-offline -s settings.xml
-
 test:
-  override:
-    - |
-        if [[ ${CIRCLE_BRANCH} = "master" ]]; then
-          mvn clean deploy -s settings.xml -q
-        else
-          mvn clean install -s settings.xml -q
-        fi
-
   post:
     # Stick the surefire test reports where CircleCI can read them
     - mkdir -p $CIRCLE_TEST_REPORTS/junit/
