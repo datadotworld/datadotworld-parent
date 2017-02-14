@@ -20,4 +20,4 @@ deployment:
   releases:
     branch: master
     commands:
-      - build-tools/handle-mvn-release.sh
+      - mvn-release.sh
