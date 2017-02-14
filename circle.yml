@@ -20,4 +20,5 @@ deployment:
   releases:
     branch: master
     commands:
-      - mvn-release.sh
+      - ./mvn-release.sh
+
