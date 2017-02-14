@@ -1,0 +1,36 @@
+machine:
+  java:
+    version: openjdk8
+
+  environment:
+    _JAVA_OPTIONS: "-Xms512m -Xmx1792m"
+
+checkout:
+  post:
+    - git submodule sync
+    - git submodule update --init
+
+dependencies:
+  override:
+    - |
+        mvn test-compile dependency:go-offline -s settings.xml
+
+test:
+  override:
+    - |
+        if [[ ${CIRCLE_BRANCH} = "master" ]]; then
+          mvn clean deploy -s settings.xml -q
+        else
+          mvn clean install -s settings.xml -q
+        fi
+
+  post:
+    # Stick the surefire test reports where CircleCI can read them
+    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+    - find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+
+deployment:
+  releases:
+    branch: master
+    commands:
+      - build-tools/handle-mvn-release.sh
