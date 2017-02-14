@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>world.data</groupId>
@@ -16,8 +17,6 @@
         <java.source.version>1.8</java.source.version>
         <java.target.version>1.8</java.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <bintray.repo>oss-maven</bintray.repo>
-        <bintray.package>datadotworld-parent</bintray.package>
     </properties>
 
     <licenses>
@@ -52,12 +51,14 @@
 
     <distributionManagement>
         <repository>
-            <id>bintray-datadotworld-oss-maven</id>
-            <name>datadotworld-oss-maven</name>
-            <url>https://api.bintray.com/maven/datadotworld/${bintray.repo}/${bintray.package}/;publish=1</url>
+            <id>bintray</id>
+            <name>bintray-releases</name>
+            <url>
+                https://api.bintray.com/maven/${env.BINTRAY_REPO_OWNER}/${env.BINTRAY_REPO}/${project.artifactId}/;publish=1
+            </url>
         </repository>
         <snapshotRepository>
-            <id>jfrog-snapshots</id>
+            <id>ojo</id>
             <name>oss-jfrog-artifactory-snapshots</name>
             <url>https://oss.jfrog.org/artifactory/oss-snapshot-local</url>
         </snapshotRepository>
@@ -93,24 +94,11 @@
                 </executions>
                 <configuration>
                     <transformers>
-                        <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                     </transformers>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
