@@ -15,30 +15,22 @@
 #This product includes software developed at data.world, Inc.(http://www.data.world/).
 
 #!/bin/bash
-set -o errexit
-
-check_var() {
-    if [[ ! -v $1 || -z $(eval echo \$${1}) ]]; then
-        echo "Missing environment variable $1 : $2"
-        ((++badVars))
-    fi
-}
-
-resolve_vars() {
-    if [[ $badVars > 0 ]]; then
-        echo "There were one or more missing build variables"
-        exit 1
-    fi
-}
+set -o errexit -o nounset
 
 do_release() {
-    check_var MVN_RELEASE_TAG
-    check_var MVN_RELEASE_DEV_VER
-    check_var MVN_RELEASE_USER_EMAIL
-    check_var MVN_RELEASE_USER_NAME
-    resolve_vars
-
-    set -e
+    MVN_RELEASE_VER=${MVN_RELEASE_VER}
+    MVN_RELEASE_TAG=${MVN_RELEASE_TAG}
+    MVN_RELEASE_DEV_VER=${MVN_RELEASE_DEV_VER}
+    MVN_RELEASE_USER_EMAIL=${MVN_RELEASE_USER_EMAIL}
+    MVN_RELEASE_USER_NAME=${MVN_RELEASE_USER_NAME}
+    BINTRAY_USERNAME=${BINTRAY_USERNAME}
+    BINTRAY_PASSWORD=${BINTRAY_PASSWORD}
+    SONATYPE_USERNAME=${SONATYPE_USERNAME}
+    SONATYPE_PASSWORD=${SONATYPE_PASSWORD}
+    BINTRAY_REPO_OWNER=${BINTRAY_REPO_OWNER}
+    BINTRAY_REPO=${BINTRAY_REPO}
+    CIRCLE_PROJECT_REPONAME=${CIRCLE_PROJECT_REPONAME}
+    GPG_PASSPHRASE=${GPG_PASSPHRASE}
 
     git config user.email "${MVN_RELEASE_USER_EMAIL}"
     git config user.name "${MVN_RELEASE_USER_NAME}"
