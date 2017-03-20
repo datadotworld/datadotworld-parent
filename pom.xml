@@ -3,7 +3,7 @@
 
     <groupId>world.data</groupId>
     <artifactId>datadotworld-parent</artifactId>
-    <version>0.2.1-SNAPSHOT</version>
+    <version>0.2.1</version>
     <packaging>pom</packaging>
 
     <name>data.world Parent POM</name>
@@ -37,7 +37,7 @@
         <connection>scm:git:git@github.com:datadotworld/datadotworld-parent.git</connection>
         <developerConnection>scm:git:git@github.com:datadotworld/datadotworld-parent.git</developerConnection>
         <url>git@github.com:datadotworld/datadotworld-parent.git</url>
-        <tag>HEAD</tag>
+        <tag>v0.2.1</tag>
     </scm>
 
     <distributionManagement>
