@@ -15,30 +15,27 @@
 #This product includes software developed at data.world, Inc.(http://www.data.world/).
 
 #!/bin/bash
-set -o errexit
-
-check_var() {
-    if [[ ! -v $1 || -z $(eval echo \$${1}) ]]; then
-        echo "Missing environment variable $1 : $2"
-        ((++badVars))
-    fi
-}
-
-resolve_vars() {
-    if [[ $badVars > 0 ]]; then
-        echo "There were one or more missing build variables"
-        exit 1
-    fi
-}
+set -o errexit -o nounset
 
 do_release() {
-    check_var MVN_RELEASE_TAG
-    check_var MVN_RELEASE_DEV_VER
-    check_var MVN_RELEASE_USER_EMAIL
-    check_var MVN_RELEASE_USER_NAME
-    resolve_vars
+    # These variables are passed as build parameters to CircleCI
+    : ${MVN_RELEASE_VER}
+    : ${MVN_RELEASE_TAG}
+    : ${MVN_RELEASE_DEV_VER}
+    : ${MVN_RELEASE_USER_EMAIL}
+    : ${MVN_RELEASE_USER_NAME}
 
-    set -e
+    # These are environment variables that need to be configured within CircleCI on the project
+    : ${BINTRAY_USERNAME}
+    : ${BINTRAY_PASSWORD}
+    : ${BINTRAY_REPO_OWNER}
+    : ${BINTRAY_REPO}
+    : ${SONATYPE_USERNAME}
+    : ${SONATYPE_PASSWORD}
+    : ${CIRCLE_PROJECT_REPONAME}
+
+    # Passphrase associated with GPG key installed at Bintray to sign files
+    : ${GPG_PASSPHRASE}
 
     git config user.email "${MVN_RELEASE_USER_EMAIL}"
     git config user.name "${MVN_RELEASE_USER_NAME}"
