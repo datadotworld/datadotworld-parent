@@ -19,23 +19,23 @@ set -o errexit -o nounset
 
 do_release() {
     # These variables are passed as build parameters to CircleCI
-    MVN_RELEASE_VER=${MVN_RELEASE_VER}
-    MVN_RELEASE_TAG=${MVN_RELEASE_TAG}
-    MVN_RELEASE_DEV_VER=${MVN_RELEASE_DEV_VER}
-    MVN_RELEASE_USER_EMAIL=${MVN_RELEASE_USER_EMAIL}
-    MVN_RELEASE_USER_NAME=${MVN_RELEASE_USER_NAME}
+    : ${MVN_RELEASE_VER}
+    : ${MVN_RELEASE_TAG}
+    : ${MVN_RELEASE_DEV_VER}
+    : ${MVN_RELEASE_USER_EMAIL}
+    : ${MVN_RELEASE_USER_NAME}
 
     # These are environment variables that need to be configured within CircleCI on the project
-    BINTRAY_USERNAME=${BINTRAY_USERNAME}
-    BINTRAY_PASSWORD=${BINTRAY_PASSWORD}
-    BINTRAY_REPO_OWNER=${BINTRAY_REPO_OWNER}
-    BINTRAY_REPO=${BINTRAY_REPO}
-    SONATYPE_USERNAME=${SONATYPE_USERNAME}
-    SONATYPE_PASSWORD=${SONATYPE_PASSWORD}
-    CIRCLE_PROJECT_REPONAME=${CIRCLE_PROJECT_REPONAME}
+    : ${BINTRAY_USERNAME}
+    : ${BINTRAY_PASSWORD}
+    : ${BINTRAY_REPO_OWNER}
+    : ${BINTRAY_REPO}
+    : ${SONATYPE_USERNAME}
+    : ${SONATYPE_PASSWORD}
+    : ${CIRCLE_PROJECT_REPONAME}
 
     # Passphrase associated with GPG key installed at Bintray to sign files
-    GPG_PASSPHRASE=${GPG_PASSPHRASE}
+    : ${GPG_PASSPHRASE}
 
     git config user.email "${MVN_RELEASE_USER_EMAIL}"
     git config user.name "${MVN_RELEASE_USER_NAME}"
