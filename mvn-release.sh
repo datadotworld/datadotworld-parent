@@ -1,4 +1,21 @@
+#Copyright 2016 data.world, Inc.
+#
+#Licensed under the Apache License, Version 2.0 (the "License");
+#you may not use this file except in compliance with the
+#License.
+#
+#You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+#
+#Unless required by applicable law or agreed to in writing, software
+#distributed under the License is distributed on an "AS IS" BASIS,
+#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+#implied. See the License for the specific language governing
+#permissions and limitations under the License.
+#
+#This product includes software developed at data.world, Inc.(http://www.data.world/).
+
 #!/bin/bash
+set -o errexit
 
 check_var() {
     if [[ ! -v $1 || -z $(eval echo \$${1}) ]]; then
@@ -28,7 +45,8 @@ do_release() {
 
     mvn -B -Dtag=${MVN_RELEASE_TAG} release:prepare \
                -DreleaseVersion=${MVN_RELEASE_VER} \
-               -DdevelopmentVersion=${MVN_RELEASE_DEV_VER}
+               -DdevelopmentVersion=${MVN_RELEASE_DEV_VER} \
+               -DscmCommentPrefix='[maven-release-plugin] [skip ci]'
 
     mvn -B -s settings.xml release:perform
 
@@ -36,6 +54,8 @@ do_release() {
 
     # Instruct Bintray to GPG sign the contents of this version using the private key stored there
     curl \
+        --silent \
+        --fail \
         --request POST \
         --user "${BINTRAY_USERNAME}:${BINTRAY_PASSWORD}" \
         --header "X-GPG-PASSPHRASE: ${GPG_PASSPHRASE}" \
@@ -43,15 +63,19 @@ do_release() {
 
     # Instruct Bintray to publish the signature files just created
     curl \
+        --silent \
+        --fail \
         --request POST \
         --user "${BINTRAY_USERNAME}:${BINTRAY_PASSWORD}" \
     https://api.bintray.com/content/${BINTRAY_REPO_OWNER}/${BINTRAY_REPO}/${CIRCLE_PROJECT_REPONAME}/${MVN_RELEASE_VER}/publish
 
     # Instruct Bintray to sync all files in this version to Maven Central
     curl \
+        --silent \
+        --fail \
         --request POST \
         --header "Content-Type: application/json" \
-        --user "${BINTRAY_USER}:${BINTRAY_PASSWORD}" \
+        --user "${BINTRAY_USERNAME}:${BINTRAY_PASSWORD}" \
         --data '{
             "username": "'${SONATYPE_USERNAME}'",
             "password": "'${SONATYPE_PASSWORD}'"
